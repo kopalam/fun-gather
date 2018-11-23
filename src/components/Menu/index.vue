@@ -6,14 +6,18 @@
 */
 <template>
   <el-menu
-    default-active="1"
+    :default-active="active"
     class="el-menu-vertical-demo"
-    @open="handleOpen"
-    @close="handleClose"
     background-color="rgb(30, 33, 42)"
     text-color="#fff"
     active-text-color="rgb(40, 179, 120)"
     style="border: none">
+    <router-link to="/Classify">
+      <el-menu-item index="6">
+        <i class="el-icon-document"></i>
+        <span slot="title">分类管理</span>
+      </el-menu-item>
+    </router-link>
     <el-submenu index="1">
       <template slot="title">
         <i class="el-icon-tickets"></i>
@@ -56,15 +60,16 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import menuData from './data'
   export default {
     name: 'Menu',
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath)
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath)
-      }
+    data () {
+        return {
+            active: '1-1'
+        }
+    },
+    mounted () {
+        this.active = menuData[window.location.hash.slice(1)]
     }
   }
 </script>

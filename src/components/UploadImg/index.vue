@@ -13,7 +13,7 @@
     :before-upload="beforeUploadImg"
     :http-request="uploadImg"
   >
-    <img v-if="imgUrl" :src="baseUrl + imgUrl" class="avatar">
+    <img v-if="imgUrl && imgUrl != 0" :src="baseUrl + imgUrl" class="avatar">
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
   </el-upload>
 </template>
