@@ -42,15 +42,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="page-station">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page.sync="page"
-        :page-size="10"
-        layout="total, prev, pager, next, jumper"
-        :total="myClassDatas.length">
-      </el-pagination>
-    </div>
+    <!--<div class="page-station">-->
+      <!--<el-pagination-->
+        <!--@current-change="handleCurrentChange"-->
+        <!--:current-page.sync="page"-->
+        <!--:page-size="10"-->
+        <!--layout="total, prev, pager, next, jumper"-->
+        <!--:total="myClassDatas.length">-->
+      <!--</el-pagination>-->
+    <!--</div>-->
   </div>
 </template>
 

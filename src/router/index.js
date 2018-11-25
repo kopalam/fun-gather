@@ -9,6 +9,7 @@ import UserList from '@/pages/UserList/index'
 import TeacherList from '@/pages/TeacherList/index'
 import MyClass from '@/pages/MyClass/index'
 import ClassList from '@/pages/ClassList/index'
+import Classify from '@/pages/Classify/index'
 
 Vue.use(Router)
 
@@ -53,11 +54,14 @@ export default new Router({
       path: '/TeacherList',
       name: 'TeacherList',
       component: TeacherList
-    },
-    {
-      path: '/MyClass',
-      name: 'MyClass',
-      component: MyClass
+    }, {
+        path: '/MyClass',
+        name: 'MyClass',
+        component: MyClass
+    }, {
+        path: '/Classify',
+        name: 'Classify',
+        component: Classify
     },
   ]
 })

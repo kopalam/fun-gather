@@ -5,7 +5,10 @@
 *
 */
 <template>
-    <div class="wrap">{{title}}</div>
+    <div class="wrap">
+        {{title}}
+        <slot></slot>
+    </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -26,5 +29,8 @@
     line-height: 40px;
     border-bottom: 1px #ebebeb solid;
     margin-bottom: 50px;
+  }
+  .wrap button {
+      vertical-align: text-bottom;
   }
 </style>
