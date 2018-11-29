@@ -6,36 +6,37 @@
 */
 <template>
   <div>
-    <PageTitle :title="'用户列表'"/>
+    <PageTitle :title="'用户列表'" />
     <el-table
       :data="userListDatas"
       border
       style="width: 100%">
       <el-table-column
+        prop="uid"
+        label="uid"
+        width="180">
+      </el-table-column>
+      <el-table-column
         label="头像／名称"
+        prop="nickName"
         width="180">
-        <template slot-scope="scope">
-          <AvatarUserName :childrenData="scope.row"/>
-        </template>
+        <!--<template slot-scope="scope">-->
+          <!--<AvatarUserName :childrenData="scope.row"/>-->
+        <!--</template>-->
       </el-table-column>
       <el-table-column
-        prop="date"
-        label="登录时间"
-        width="180">
+        prop="course"
+        label="课程">
       </el-table-column>
-      <el-table-column
-        prop="address"
-        label="总积分">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        label="操作"
-        width="150">
-        <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">积分明细</el-button>
-          <el-button type="text" size="small">禁用</el-button>
-        </template>
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--fixed="right"-->
+        <!--label="操作"-->
+        <!--width="150">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button @click="handleClick(scope.row)" type="text" size="small">积分明细</el-button>-->
+          <!--<el-button type="text" size="small">禁用</el-button>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
     </el-table>
     <!--<div class="page-station">-->
       <!--<el-pagination-->
@@ -46,60 +47,42 @@
         <!--:total="userListDatas.length">-->
       <!--</el-pagination>-->
     <!--</div>-->
+    <Model :visible="showModel" :modelDate="modelDate" @closeModel="closeModel" @submit="submit"></Model>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import PageTitle from '@/components/PageTitle/index'
   import AvatarUserName from '@/components/AvatarUserName/index'
+  import Model from './Model'
   export default {
     name: 'UserList',
-    components: { AvatarUserName, PageTitle },
+    components: { AvatarUserName, PageTitle, Model },
     data() {
       return {
+        modelDate: {
+            type: 'create',
+            item: {},
+        },
+        showModel: false,
         page: 1,
-        userListDatas: [{
-          date: '2016-05-03',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          img: 'http://img2.kuwo.cn/star/starheads/300/48/40/663552438.jpg',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        userListDatas: []
       }
     },
     methods: {
-      handleCurrentChange() {
-
-      }
+      getUserList () {
+          this.$request({
+              url: 'apis/admin/admin/userlist',
+              data: {
+                  handle: 'student'
+              }
+          }).then(res => {
+              this.userListDatas = res.data
+          })
+      },
+    },
+      mounted () {
+        this.getUserList()
     }
   }
 </script>
