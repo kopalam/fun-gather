@@ -7,11 +7,12 @@
 import axios from 'axios'
 import qs from 'qs'
 // axios.defaults.baseURL = '/apis'
+axios.defaults.timeout = 20000
 
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
   // Do something with response data
-  return response;
+    return response
 }, function (error) {
   // Do something with response error
   error.code = error.response.status
@@ -55,8 +56,8 @@ axios.interceptors.response.use(function (response) {
     default:
       error.message = `连接错误${error.response.status}`
   }
-  return Promise.reject(error);
-});
+  return Promise.reject(error)
+})
 
 async function request(options) {
   options.method = 'post'
@@ -69,9 +70,12 @@ async function request(options) {
     axios(options).then(res => {
       if(res.data.status === 0) {
         resolve(res.data)
-      } else {
+      } else if (res.data.status === 1) {
         this.$message.error(`status: ${res.data.status}, message: ${ res.data.message }`)
         reject(res.data)
+      } else if (res.data.status === 2) {
+        this.$message.error(`status: ${res.data.status}, message: ${ res.data.message }`)
+        setTimeout(() => this.$router.go('/login'), 1200)
       }
     }).catch(error => {
       this.$message.error(`${error.code} : ${ error.message }`)

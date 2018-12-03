@@ -25,6 +25,9 @@ function readFileAsDataURL(file, callback) {
   }
   a.readAsDataURL(file)
 }
+
+
+
 export default {
   readFileAsDataURL
 }

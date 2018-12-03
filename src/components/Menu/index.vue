@@ -11,7 +11,7 @@
     background-color="rgb(30, 33, 42)"
     text-color="#fff"
     active-text-color="rgb(40, 179, 120)"
-    style="border: none">
+    :style="{border: 'none', minHeight: minH}">
     <router-link to="/Classify">
       <el-menu-item index="6">
         <i class="el-icon-document"></i>
@@ -63,6 +63,7 @@
   import menuData from './data'
   export default {
     name: 'Menu',
+    props: ['minH'],
     data () {
         return {
             active: '1-1'

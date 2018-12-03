@@ -7,7 +7,7 @@
 <template>
   <div class="wrap">
     <div class="avatar">
-      <img :src="childrenData.img"/>
+      <img :src="childrenData.avatar"/>
     </div>
     <div>{{childrenData.name}}</div>
   </div>
