@@ -32,11 +32,19 @@
     <el-form-item label="上课地点:" prop="address">
       <el-input v-model="ruleForm.address" placeholder="请填写上课地点"></el-input>
     </el-form-item>
-    <el-form-item label="课时:" prop="classes">
-      <el-input-number v-model="ruleForm.classes" :min="1" :max="10" label="描述文字"></el-input-number>
-    </el-form-item>
-    <el-form-item label="价格:" prop="price">
-      <el-input v-model="ruleForm.price" placeholder="请填写价格"></el-input>
+    <el-form-item label="课时／价格:">
+      <el-input placeholder="请填写价格" v-model.number="ruleForm.class_time1" @keydown.native="inputLimit">
+        <template slot="prepend">20课时</template>
+      </el-input>
+      <el-input placeholder="请填写价格" v-model.number="ruleForm.class_time2" @keydown.native="inputLimit">
+        <template slot="prepend">40课时</template>
+      </el-input>
+      <el-input placeholder="请填写价格" v-model.number="ruleForm.class_time3" @keydown.native="inputLimit">
+        <template slot="prepend">60课时</template>
+      </el-input>
+      <el-input placeholder="请填写价格" v-model.number="ruleForm.class_time4" @keydown.native="inputLimit">
+        <template slot="prepend">80课时</template>
+      </el-input>
     </el-form-item>
     <el-form-item label="是否可报名:" prop="start">
       <el-switch v-model="ruleForm.start"></el-switch>
@@ -62,6 +70,32 @@
   import UE from '@/components/UE/index'
   import UploadImg from '@/components/UploadImg/index'
   import moment from 'moment'
+
+  let inputLimit = function(e) {
+      let num = e.target.value || ''
+      let code = e.which || e.keyCode
+      let str = (e.key && e.key != 'Unidentified') ? e.key : num.substr(num.length - 1)
+      console.log('|type:' + e.type + '|code:' + code + '|str:' + str + '|value:' + num)
+      //无论任何情况，皆可执行
+      if(code == '8') {
+          return true
+      }
+      //没有满足任何一种情况，中断执行
+      if(!(/[\d.]/.test(str) || code == '190')) {
+          e.returnValue = false
+          return false
+      }
+      if(num.length > 12 ||
+          (num.indexOf('.') >= 0 && code == '190') ||
+          ((num.indexOf('.') == num.length - 3) && num.length > 3) ||
+          (num.length == 0 && code == '190')) {
+          e.returnValue = false
+          return false
+      }
+      return true
+
+  }
+
   export default {
     name: 'AddClass',
     components: { PageTitle, UE, UploadImg },
@@ -74,14 +108,15 @@
           kid: [],
           teacher_id: null,
           name: '',
-          time: [],
           address: '',
           remark: '',
-          classes: 1,
           content: '',
           cover:'',
           start: true,
-          price: ''
+          class_time1: null,
+          class_time2: null,
+          class_time3: null,
+          class_time4: null,
         },
         rules: {
           kid: [
@@ -89,9 +124,6 @@
           ],
           title: [
             { required: true, message: '请输入标题', trigger: 'blur' }
-          ],
-          price: [
-            { required: true, message: '请输入价格', trigger: 'blur' }
           ],
           name: [
             { required: true, message: '请输入课程名称', trigger: 'blur' }
@@ -102,18 +134,15 @@
           address: [
             { required: true, message: '请输入上课地址', trigger: 'blur' }
           ],
-          time: [
-            { required: true, message: '请选择上课时间', trigger: 'change' }
-          ],
-          classes: [
-            { required: true, message: '请输入课时', trigger: 'change' }
-          ],
           cover: [
             { required: true, message: '请上传封面图片', trigger: 'change' }
           ],
           content: [
             { required: true, message: '请输入内容', trigger: 'blur' }
-          ]
+          ],
+          time: [
+            { required: true, message: '请输入上课时间', trigger: 'change' }
+          ],
         }
       }
     },
@@ -121,10 +150,11 @@
       const { course_id } = this.$route.query
       if (course_id) {
         this.$request({
-          url: 'addons/course/course/detail',
+          url: '/apis/addons/course/course/detail',
           data: { course_id }
         }).then(res => {
           const { course, teacher, course_set } = res.data
+          const class_time = JSON.parse(course.class_time)
           this.ruleForm = {
             course_id,
             handle: 'edit',
@@ -134,29 +164,37 @@
             time: [moment(course_set.stime), moment(course_set.etime)],
             address: course_set.address,
             remark: course_set.remark,
-            classes: course_set.classes,
             content: course.content,
             cover: course.cover,
             start: course_set.status === 0 ? true : false,
-            price: course.price
+            class_time1: class_time[0][1],
+            class_time2: class_time[1][1],
+            class_time3: class_time[2][1],
+            class_time4: class_time[3][1],
           }
         })
        }
-      this.$request({
-        url: '/apis/addons/kinds/kinds/getkinds',
-        data: {},
-      }).then(res => {
-        const data = res.data
-        const sNav = data.filter(val => val.parent_id)
-        this.kidLists = sNav
-      })
-
-      this.$request({
-        url: '/apis/admin/admin/teacher',
-        data: {}
-      }).then(res => this.teacherLists = res.data)
+      this.getTeacher()
+      this.getClassify()
     },
     methods: {
+      inputLimit: inputLimit,
+      getTeacher () {
+          this.$request({
+              url: '/apis/admin/admin/teacher',
+              data: {}
+          }).then(res => this.teacherLists = res.data)
+      },
+      getClassify () {
+          this.$request({
+              url: '/apis/addons/kinds/kinds/getkinds',
+              data: {},
+          }).then(res => {
+              const data = res.data
+              const sNav = data.filter(val => val.parent_id)
+              this.kidLists = sNav
+          })
+      },
       getImgData (data) {
         this.ruleForm.cover = data
       } ,
@@ -169,17 +207,33 @@
 
           const data = this.ruleForm
 
-          data.stime = Math.round(data.time[0] / 1000)
-          data.etime = Math.round(data.time[1] / 1000)
-          data.start = data.start ? 0 : 1
-
+          if(data.time) {
+              data.stime = Math.round(data.time[0] / 1000)
+              data.etime = Math.round(data.time[1] / 1000)
+          }
           delete data.time
+
+          data.start = data.start ? 0 : 1
 
           for (let k in data) {
             if (data[k] === "") {
               delete data[k]
             }
           }
+
+          let newArr = []
+          for (let i = 1; i <= 4; i ++) {
+              if (data['class_time'+i] == null) {
+                  this.$message.success('【课时／价格】填写不完全')
+                  return false
+              }
+              if (data['class_time'+i] != null) {
+                  newArr.push([i*20,data['class_time'+i]])
+              }
+              delete data['class_time'+i]
+          }
+          newArr = `[${newArr.map(t=>`[${t.map(i => i).join(',')}]`).join(',')}]`
+          data.class_time = newArr
 
           this.$request({
             url: '/apis/addons/course/course/coursehandle',

@@ -34,11 +34,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="price"
-          label="价格"
-          width="100">
+          prop="class_time"
+          label="课时/价格"
+          width="150">
           <template slot-scope="scope">
-            ¥{{ scope.row.price }}
+            <div v-for="item in JSON.parse(scope.row.class_time)">
+              {{`${item[0]}课时／${item[1]}元`}}
+            </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -51,7 +53,7 @@
           label="操作"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" size="small" @click="handleChangeStatus(scope.row)">禁用</el-button>
+            <el-button type="text" size="small" @click="handleChangeStatus(scope.row.course_id)">{{scope.row.status === '1' ? '启用' : '禁用'}}</el-button>
             <el-button type="text" size="small" @click="pageChange(scope.row.course_id)">编辑</el-button>
           </template>
         </el-table-column>
@@ -82,14 +84,27 @@
       }
     },
     methods: {
-      handleChangeStatus(id) {
+      getData () {
+          this.$request({
+              url: '/apis/addons/course/course/courselist',
+              data: {
+                  page: this.page
+              }
+          }).then(res => {
+              this.classDatas = res.data
+          })
+      },
+      handleChangeStatus(course_id) {
         this.$request({
-          url:'/apis/addons/article/article/able',
+          url:'/apis/addons/course/course/coursehandle',
           data: {
-            id,
-            uid: ''
+            course_id,
+            handle: 'disable'
           }
-        }).then(res => this.$message.success(res.message))
+        }).then(() => {
+            this.$message.success('操作成功')
+            this.getData()
+        })
       },
       handleCurrentChange(){
 
@@ -99,15 +114,7 @@
       }
     },
     mounted () {
-      this.$request({
-        url: '/apis/addons/course/course/courselist',
-        data: {
-          page: this.page
-        }
-      }).then(res => {
-        console.log(res)
-        this.classDatas = res.data
-      })
+      this.getData()
     }
   }
 </script>

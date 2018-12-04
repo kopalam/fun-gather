@@ -69,7 +69,7 @@
     methods: {
       getArticleList () {
         this.$request({
-          url: 'apis/addons/article/article/index',
+          url: '/apis/addons/article/article/index',
           data: {
             page: this.page
           }
