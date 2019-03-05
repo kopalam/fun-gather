@@ -6,7 +6,7 @@
  */
 import axios from 'axios'
 import qs from 'qs'
-// axios.defaults.baseURL = '/apis'
+axios.defaults.baseURL = '/apis'
 axios.defaults.timeout = 20000
 
 // Add a response interceptor

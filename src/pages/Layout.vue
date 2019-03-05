@@ -1,7 +1,7 @@
 <template>
     <el-container :style="{height: screenHeight + 'px'}">
         <el-header class="flex header-wrap">
-            <div class="header-title b-green t-while">异域街舞后台</div>
+            <div class="header-title b-green t-while">采集管理后台</div>
             <div class="flex1 header-handle">
                 <el-dropdown>
                     <span class="header-username">{{nickName}}</span>

@@ -12,7 +12,7 @@ import TeacherList from '@/pages/TeacherList/index'
 import MyClass from '@/pages/MyClass/index'
 import ClassList from '@/pages/ClassList/index'
 import Classify from '@/pages/Classify/index'
-
+import Gather from '@/pages/Gather/index'
 const Login = resolve => require(['@/pages/Login/index'], resolve)
 
 Vue.use(Router)
@@ -32,7 +32,11 @@ const router = new Router({
                 path: '/',
                 name: 'ArticleList',
                 component: ArticleList,
-            },  {
+            }, {
+                path: '/Gather',
+                name: 'Gather',
+                component: Gather,
+            }, {
                 path: '/AddArticle',
                 name: 'AddArticle',
                 component: AddArticle,
@@ -74,18 +78,18 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-    if (to.path.startsWith('/login')) {
-        window.localStorage.removeItem('user')
-        next()
-    } else {
-        let user = JSON.parse(window.localStorage.getItem('user'))
-        if (!user) {
-            next({path: '/login'})
-        } else {
-            next()
-        }
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     if (to.path.startsWith('/login')) {
+//         window.localStorage.removeItem('user')
+//         next()
+//     } else {
+//         let user = JSON.parse(window.localStorage.getItem('user'))
+//         if (!user) {
+//             next({path: '/login'})
+//         } else {
+//             next()
+//         }
+//     }
+// })
 
 export default router

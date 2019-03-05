@@ -6,5 +6,5 @@
  */
 
 export default {
-  baseUrl: 'https://alienz.imchaotan.com/'
+  baseUrl: 'http://lumen.test'
 }
