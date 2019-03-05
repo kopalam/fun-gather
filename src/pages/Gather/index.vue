@@ -53,17 +53,20 @@
 </template>
 
 <script type="text/ecmascript-6">
-import PageTitle from "@/components/PageTitle/index";
-import moment from "moment";
+  import PageTitle from "@/components/PageTitle/index";
+  import moment from "moment";
+  let ruleObj = {
+          title: ["h2", "text"],
+          link: ["a", "href"],
+          dates: [".time", "text"]
+        };
+  let ruleArr = JSON.stringify(ruleObj);
 
-let inputLimit = function(e) {
+  let inputLimit = function(e) {
   let num = e.target.value || "";
   let code = e.which || e.keyCode;
-  let str =
-    e.key && e.key != "Unidentified" ? e.key : num.substr(num.length - 1);
-  console.log(
-    "|type:" + e.type + "|code:" + code + "|str:" + str + "|value:" + num
-  );
+  let str = e.key && e.key != "Unidentified" ? e.key : num.substr(num.length - 1);
+
   //无论任何情况，皆可执行
   if (code == "8") {
     return true;
@@ -95,11 +98,7 @@ export default {
       ruleForm: {
         handle: "",
         name: "",
-        rule:{
-          title: ["h2", "text"],
-          link: ["a", "href"],
-          dates: [".time", "text"]
-        },
+        rule:ruleArr,
         range: "",
         url: "",
         author: ""
@@ -107,7 +106,7 @@ export default {
       rules: {
         rule: [{ required: true, message: "请填写规则", trigger: "change" }],
         range: [{ required: true, message: "请输入父类元素", trigger: "blur" }],
-        name: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入网站名称", trigger: "blur" }], 
         author: [{ required: true, message: "请输入作者", trigger: "change" }],
         url: [
           { required: true, message: "请输入采集列表URL", trigger: "blur" }
@@ -116,6 +115,7 @@ export default {
       }
     };
   },
+
   // mounted () {
   //   const { course_id } = this.$route.query //尝试获取id，如果存在，则走提交编辑
   //   if (course_id) {
@@ -150,6 +150,7 @@ export default {
   methods: {
     submitForm() {
       //  通过ajax提交到后台
+      this.ruleForm.rule = JSON.parse(this.ruleForm.rule); //字符串转为数组
       this.$request({
         url: "/gather",
         data: this.ruleForm
@@ -231,6 +232,7 @@ export default {
   //   }
   // }
 };
+
 </script>
 
 <style scoped>
