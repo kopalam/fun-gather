@@ -11,7 +11,7 @@
     label-width="100px"
     class="demo-ruleForm"
   >
-    <PageTitle :title="'采集测试'"/>
+    <PageTitle :title="'采集列表测试'"/>
     <el-form-item label="采集规则:" prop="rules">
       <el-input type="textarea" :rows="4" v-model="ruleForm.rule" placeholder="请填入对应采集规则"></el-input>
     </el-form-item>
@@ -30,11 +30,20 @@
     <el-form-item label="采集URL" prop="url">
       <el-input v-model="ruleForm.url" placeholder="请填入采集列表的URL"></el-input>
     </el-form-item>
+    <el-form-item label="类型" prop="type">
+      <el-radio v-model="ruleForm.type" label="1">列表</el-radio>
+      <el-radio v-model="ruleForm.type" label="2">内容</el-radio>
+    </el-form-item>
+    <el-form-item label="是否编码" prop="type">
+      <el-radio v-model="ruleForm.encoding" label="true">需要</el-radio>
+      <el-radio v-model="ruleForm.encoding" label="false">不需</el-radio>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm">提 交</el-button>
       <el-button type="primary" @click="tryForm">测 试</el-button>
       <!--<el-button @click="resetForm">重置</el-button>-->
     </el-form-item>
+
     <!--<el-form-item label="所属元素:" prop="teacher_id">-->
     <!--<el-select v-model="ruleForm.teacher_id" placeholder="请选择所属老师">-->
     <!--<el-option v-for="teacherList in teacherLists" :key="teacherList.teacher_id" :label="teacherList.name" :value="teacherList.teacher_id"></el-option>-->
@@ -49,23 +58,29 @@
     <!--end-placeholder="结束日期">-->
     <!--</el-date-picker>-->
     <!--</el-form-item>-->
+    <el-table :data="testData" border style="width: 50%">
+      <el-table-column prop="title" label="标题" width="280"></el-table-column>
+      <el-table-column prop="link" label="链接" width="280"></el-table-column>
+      <el-table-column prop="content" label="内容" width="280"></el-table-column>
+    </el-table>
   </el-form>
 </template>
 
 <script type="text/ecmascript-6">
-  import PageTitle from "@/components/PageTitle/index";
-  import moment from "moment";
-  let ruleObj = {
-          title: ["h2", "text"],
-          link: ["a", "href"],
-          dates: [".time", "text"]
-        };
-  let ruleArr = JSON.stringify(ruleObj);
-
-  let inputLimit = function(e) {
+import PageTitle from "@/components/PageTitle/index";
+import moment from "moment";
+let ruleObj = {
+  title: [".item-text>h3", "text"],
+  link: [".item-tit>a", "href"]
+  // dates: [".time", "text"]
+};
+let ruleArr = JSON.stringify(ruleObj);
+let inputLimit = function(e) {
   let num = e.target.value || "";
   let code = e.which || e.keyCode;
-  let str = e.key && e.key != "Unidentified" ? e.key : num.substr(num.length - 1);
+  let getData = [];
+  let str =
+    e.key && e.key != "Unidentified" ? e.key : num.substr(num.length - 1);
 
   //无论任何情况，皆可执行
   if (code == "8") {
@@ -93,20 +108,22 @@ export default {
   components: { PageTitle },
   data() {
     return {
-      kidLists: [], // 分类列表
-      teacherLists: [],
+      testData: [],
       ruleForm: {
-        handle: "",
-        name: "",
-        rule:ruleArr,
-        range: "",
-        url: "",
-        author: ""
+        handle: "chinaGame",
+        name: "中华游戏网",
+        rule: ruleArr,
+        range: ".item-phototext",
+        url: "https://game.china.com/news/jx/",
+        author: "中华游戏网",
+        type: '',
+        encoding: "",
+        ruleList: ""
       },
       rules: {
         rule: [{ required: true, message: "请填写规则", trigger: "change" }],
         range: [{ required: true, message: "请输入父类元素", trigger: "blur" }],
-        name: [{ required: true, message: "请输入网站名称", trigger: "blur" }], 
+        name: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
         author: [{ required: true, message: "请输入作者", trigger: "change" }],
         url: [
           { required: true, message: "请输入采集列表URL", trigger: "blur" }
@@ -150,12 +167,14 @@ export default {
   methods: {
     submitForm() {
       //  通过ajax提交到后台
-      this.ruleForm.rule = JSON.parse(this.ruleForm.rule); //字符串转为数组
+      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.$request({
         url: "/gather",
         data: this.ruleForm
-      });
-    },
+      }).then(
+        res => this.testData = res.data,
+        console.log(this.testData)
+      )},
     tryForm() {
       console.log("ok");
     }
@@ -232,7 +251,6 @@ export default {
   //   }
   // }
 };
-
 </script>
 
 <style scoped>
