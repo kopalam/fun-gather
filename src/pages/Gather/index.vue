@@ -12,11 +12,17 @@
     class="demo-ruleForm"
   >
     <PageTitle :title="'采集列表测试'"/>
-    <el-form-item label="采集规则:" prop="rules">
+    <el-form-item label="列表采集规则:" prop="rule">
       <el-input type="textarea" :rows="4" v-model="ruleForm.rule" placeholder="请填入对应采集规则"></el-input>
     </el-form-item>
-    <el-form-item label="所属元素:" prop="range">
+    <el-form-item label="列表所属元素:" prop="range">
       <el-input v-model="ruleForm.range" placeholder="请填入所属父类元素 如 .articleList"></el-input>
+    </el-form-item>
+    <el-form-item label="内容采集规则:" prop="contentRule">
+      <el-input type="textarea" :rows="4" v-model="ruleForm.contentRule" placeholder="请填入内容对应采集规则"></el-input>
+    </el-form-item>
+    <el-form-item label="内容所属元素:" prop="contentRange">
+      <el-input v-model="ruleForm.contentRange" placeholder="请填入内容所属父类元素 如 .articleList"></el-input>
     </el-form-item>
     <el-form-item label="作者:" prop="author">
       <el-input v-model="ruleForm.author" placeholder="请填入作者"></el-input>
@@ -30,17 +36,14 @@
     <el-form-item label="采集URL" prop="url">
       <el-input v-model="ruleForm.url" placeholder="请填入采集列表的URL"></el-input>
     </el-form-item>
-    <el-form-item label="类型" prop="type">
-      <el-radio v-model="ruleForm.type" label="1">列表</el-radio>
-      <el-radio v-model="ruleForm.type" label="2">内容</el-radio>
-    </el-form-item>
     <el-form-item label="是否编码" prop="type">
-      <el-radio v-model="ruleForm.encoding" label="true">需要</el-radio>
-      <el-radio v-model="ruleForm.encoding" label="false">不需</el-radio>
+      <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
+      <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm">提 交</el-button>
-      <el-button type="primary" @click="tryForm">测 试</el-button>
+      <el-button type="primary" @click="tryForm">列 表 测 试</el-button>
+      <el-button type="primary" @click="tryContentForm">内 容 测 试</el-button>
       <!--<el-button @click="resetForm">重置</el-button>-->
     </el-form-item>
 
@@ -58,10 +61,10 @@
     <!--end-placeholder="结束日期">-->
     <!--</el-date-picker>-->
     <!--</el-form-item>-->
-    <el-table :data="testData" border style="width: 50%">
+    <el-table :data="testData" border style="width: 100%">
       <el-table-column prop="title" label="标题" width="280"></el-table-column>
-      <el-table-column prop="link" label="链接" width="280"></el-table-column>
-      <el-table-column prop="content" label="内容" width="280"></el-table-column>
+      <el-table-column prop="link" label="链接" width="580"></el-table-column>
+      <el-table-column prop="content" label="内容" width="580"></el-table-column>
     </el-table>
   </el-form>
 </template>
@@ -74,7 +77,12 @@ let ruleObj = {
   link: [".item-tit>a", "href"]
   // dates: [".time", "text"]
 };
-let ruleArr = JSON.stringify(ruleObj);
+let contentRuleObj = {
+  title: ["h1", "text"],
+  link: ["#chan_newsDetail", "html"]
+};
+let ruleArr = JSON.stringify(ruleObj); //列表采集规则转换成字符
+let contentRuleArr = JSON.stringify(contentRuleObj); //内容采集规则转换成字符
 let inputLimit = function(e) {
   let num = e.target.value || "";
   let code = e.which || e.keyCode;
@@ -102,6 +110,16 @@ let inputLimit = function(e) {
   }
   return true;
 };
+function toArr(vueArray) {
+  var array = [];
+
+  for (var index in vueArray) {
+    var item = restore(vueArray[index]);
+    array.push(item);
+  }
+
+  return array;
+}
 
 export default {
   name: "Gather",
@@ -109,6 +127,8 @@ export default {
   data() {
     return {
       testData: [],
+      contentData: [],
+      listTry: "",
       ruleForm: {
         handle: "chinaGame",
         name: "中华游戏网",
@@ -116,8 +136,11 @@ export default {
         range: ".item-phototext",
         url: "https://game.china.com/news/jx/",
         author: "中华游戏网",
-        type: '',
+        type: "",
         encoding: "",
+        contentRule: contentRuleArr,
+        contentRange: "",
+        ruleContentList: "",
         ruleList: ""
       },
       rules: {
@@ -165,20 +188,46 @@ export default {
   //   this.getClassify()
   // },
   methods: {
-    submitForm() {
+    tryForm() {
       //  通过ajax提交到后台
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
+      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
+      this.listTry = {
+        range: this.ruleForm.range,
+        rule: this.ruleForm.ruleList,
+        encoding: this.ruleForm.encoding,
+        url: this.ruleForm.url,
+        author: this.ruleForm.author,
+        type: 1
+      };
       this.$request({
-        url: "/gather",
-        data: this.ruleForm
-      }).then(
-        res => this.testData = res.data,
-        console.log(this.testData)
-      )},
-    tryForm() {
-      console.log("ok");
+        url: "/gatherList",
+        data: this.listTry
+      }).then(res => (this.testData = res.data));
+    },
+
+    tryContentForm() {
+      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
+      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
+      this.ruleForm.type = "2";
+      this.$request({
+        url: '/gather',
+        data:this.ruleForm
+      }).then(res => this.contentData = res.data);
+    },
+
+    submitForm() {
+      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
+      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
+      this.ruleForm.type = "3";
+      this.$request({
+        url: '/gather',
+        data:this.ruleForm
+      }).then(res => this.contentData = res.data);
     }
+    
   }
+
   // methods: {
   //   inputLimit: inputLimit,
   //   getTeacher () {
