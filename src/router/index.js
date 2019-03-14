@@ -10,9 +10,11 @@ import CreditSetting from '@/pages/CreditSetting/index'
 import UserList from '@/pages/UserList/index'
 import TeacherList from '@/pages/TeacherList/index'
 import MyClass from '@/pages/MyClass/index'
-import ClassList from '@/pages/ClassList/index'
+import GatherList from '@/pages/GatherList/index'
 import Classify from '@/pages/Classify/index'
 import Gather from '@/pages/Gather/index'
+import GatherEdit from '@/pages/GatherEdit/index'
+import GatherApi from '@/pages/GatherApi/index'
 const Login = resolve => require(['@/pages/Login/index'], resolve)
 
 Vue.use(Router)
@@ -36,14 +38,18 @@ const router = new Router({
                 path: '/Gather',
                 name: 'Gather',
                 component: Gather,
+            },{
+                path: '/GatherEdit',
+                name: 'GatherEdit',
+                component: GatherEdit,
             }, {
-                path: '/AddArticle',
-                name: 'AddArticle',
-                component: AddArticle,
+                path: '/GatherApi',
+                name: 'GatherApi',
+                component: GatherApi,
             }, {
-                path: '/ClassList',
-                name: 'ClassList',
-                component: ClassList,
+                path: '/GatherList',
+                name: 'GatherList',
+                component: GatherList,
             }, {
                 path: '/AddClass',
                 name: 'AddClass',

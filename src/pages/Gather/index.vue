@@ -12,16 +12,16 @@
     class="demo-ruleForm"
   >
     <PageTitle :title="'采集列表测试'"/>
-    <el-form-item label="列表采集规则:" prop="rule">
+    <el-form-item label="列表规则:" prop="rule">
       <el-input type="textarea" :rows="4" v-model="ruleForm.rule" placeholder="请填入对应采集规则"></el-input>
     </el-form-item>
-    <el-form-item label="列表所属元素:" prop="range">
+    <el-form-item label="列表元素:" prop="range">
       <el-input v-model="ruleForm.range" placeholder="请填入所属父类元素 如 .articleList"></el-input>
     </el-form-item>
-    <el-form-item label="内容采集规则:" prop="contentRule">
+    <el-form-item label="内容规则:" prop="contentRule">
       <el-input type="textarea" :rows="4" v-model="ruleForm.contentRule" placeholder="请填入内容对应采集规则"></el-input>
     </el-form-item>
-    <el-form-item label="内容所属元素:" prop="contentRange">
+    <el-form-item label="内容元素:" prop="contentRange">
       <el-input v-model="ruleForm.contentRange" placeholder="请填入内容所属父类元素 如 .articleList"></el-input>
     </el-form-item>
     <el-form-item label="作者:" prop="author">
@@ -35,6 +35,9 @@
     </el-form-item>
     <el-form-item label="采集URL" prop="url">
       <el-input v-model="ruleForm.url" placeholder="请填入采集列表的URL"></el-input>
+    </el-form-item>
+    <el-form-item label="完整URL" prop="full_url">
+      <el-input v-model="ruleForm.full_url" placeholder="如果需要，请填入后缀"></el-input>
     </el-form-item>
     <el-form-item label="是否编码" prop="type">
       <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
@@ -72,6 +75,7 @@
 <script type="text/ecmascript-6">
 import PageTitle from "@/components/PageTitle/index";
 import moment from "moment";
+
 let ruleObj = {
   title: [".item-text>h3", "text"],
   link: [".item-tit>a", "href"]
@@ -133,6 +137,7 @@ export default {
         handle: "chinaGame",
         name: "中华游戏网",
         rule: ruleArr,
+        full_url:'',
         range: ".item-phototext",
         url: "https://game.china.com/news/jx/",
         author: "中华游戏网",
@@ -197,11 +202,12 @@ export default {
         rule: this.ruleForm.ruleList,
         encoding: this.ruleForm.encoding,
         url: this.ruleForm.url,
+        full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,
         type: 1
       };
       this.$request({
-        url: "/gatherList",
+        url: "/gatherList?_token="+this.$token,
         data: this.listTry
       }).then(res => (this.testData = res.data));
     },
@@ -211,9 +217,11 @@ export default {
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "2";
       this.$request({
-        url: '/gather',
+        url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
-      }).then(res => this.contentData = res.data);
+      }).then(
+        res => this.testData = res.data
+        )
     },
 
     submitForm() {
@@ -221,9 +229,12 @@ export default {
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "3";
       this.$request({
-        url: '/gather',
+        url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
-      }).then(res => this.contentData = res.data);
+      }).then(() => {
+            this.$message.success('新增规则成功'),
+            setTimeout(() => { this.$router.push({ path: '/GatherList' }) }, 1000)
+          })
     }
     
   }

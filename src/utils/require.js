@@ -68,7 +68,7 @@ async function request(options) {
   }
   return new Promise((resolve,reject) => {
     axios(options).then(res => {
-      if(res.data.status === 0) {
+      if(res.data.status === 200) {
         resolve(res.data)
       } else if (res.data.status === 1) {
         this.$message.error(`status: ${res.data.status}, message: ${ res.data.message }`)

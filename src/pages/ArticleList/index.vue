@@ -75,6 +75,7 @@
           }
         }).then(res => this.articleDatas = res.data)
       },
+
       handleChangeStatus(id) {
         this.$request({
           url:'/apis/addons/article/article/able',

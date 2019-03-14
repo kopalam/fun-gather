@@ -61,8 +61,9 @@
         <i class="el-icon-edit"></i>
         <span>采集管理</span>
       </template>
-      <router-link to="/ClassList"><el-menu-item index="2-1">采集列表</el-menu-item></router-link>
-      <router-link to="/Gather"><el-menu-item index="2-2">采集设置</el-menu-item></router-link>
+      <router-link to="/GatherList"><el-menu-item index="2-1">采集列表</el-menu-item></router-link>
+      <router-link to="/Gather"><el-menu-item index="2-2">规则模式</el-menu-item></router-link>
+      <router-link to="/GatherApi"><el-menu-item index="3-1">接口模式</el-menu-item></router-link>
     </el-submenu>
   </el-menu>
 </template>

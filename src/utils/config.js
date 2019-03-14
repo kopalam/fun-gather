@@ -6,5 +6,5 @@
  */
 
 export default {
-  baseUrl: 'http://lumen.test'
+  baseUrl: 'http://lumen.com/'//'http://api.test.blackcore.com.cn'//
 }
