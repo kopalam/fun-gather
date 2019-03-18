@@ -227,6 +227,7 @@ export default {
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "2";
+      this.ruleForm.gather_types = types_value;
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
@@ -239,6 +240,7 @@ export default {
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "3";
+      this.ruleForm.gather_types = types_value;
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
