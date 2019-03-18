@@ -44,7 +44,7 @@
       <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
     </el-form-item>
        <el-form-item label="所属元素:" prop="defaultType">
-    <el-select v-model="ruleForm.defaultType" placeholder="请选择对应分类">
+    <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
     <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
     </el-select>
     </el-form-item>
@@ -73,11 +73,13 @@ let ruleObj = {
   link: [".item-tit>a", "href"]
   // dates: [".time", "text"]
 };
+
 let contentRuleObj = {
   title: ["h1", "text"],
   link: ["#chan_newsDetail", "html"]
 };
 let ruleArr = JSON.stringify(ruleObj); //列表采集规则转换成字符
+let types_value = '';
 let contentRuleArr = JSON.stringify(contentRuleObj); //内容采集规则转换成字符
 let inputLimit = function(e) {
   let num = e.target.value || "";
@@ -189,7 +191,9 @@ export default {
   //   this.getClassify()
   // },
   methods: {
-
+    obtainValue(value) {
+       types_value = value;
+    },
     getTypes() {
       this.$request({
         url:'gatherType',
@@ -210,7 +214,7 @@ export default {
         url: this.ruleForm.url,
         full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,
-        gather_types:this.ruleForm.defaultType,
+        gather_types:types_value,
         type: 1
       };
       this.$request({
