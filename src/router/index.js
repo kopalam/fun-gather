@@ -3,18 +3,11 @@ import Router from 'vue-router'
 
 import Layout from '@/pages/Layout'
 import ArticleList from '@/pages/ArticleList/index'
-import AddClass from '@/pages/AddClass/index'
-import AddArticle from '@/pages/AddArticle/index'
-import CreditDetail from '@/pages/CreditDetail/index'
-import CreditSetting from '@/pages/CreditSetting/index'
-import UserList from '@/pages/UserList/index'
-import TeacherList from '@/pages/TeacherList/index'
-import MyClass from '@/pages/MyClass/index'
 import GatherList from '@/pages/GatherList/index'
-import Classify from '@/pages/Classify/index'
 import Gather from '@/pages/Gather/index'
 import GatherEdit from '@/pages/GatherEdit/index'
 import GatherApi from '@/pages/GatherApi/index'
+import GatherType from '@/pages/GatherType/index'
 const Login = resolve => require(['@/pages/Login/index'], resolve)
 
 Vue.use(Router)
@@ -51,34 +44,10 @@ const router = new Router({
                 name: 'GatherList',
                 component: GatherList,
             }, {
-                path: '/AddClass',
-                name: 'AddClass',
-                component: AddClass,
-            }, {
-                path: '/CreditDetail',
-                name: 'CreditDetail',
-                component: CreditDetail,
-            }, {
-                path: '/CreditSetting',
-                name: 'CreditSetting',
-                component: CreditSetting,
-            }, {
-                path: '/UserList',
-                name: 'UserList',
-                component: UserList,
-            }, {
-                path: '/TeacherList',
-                name: 'TeacherList',
-                component: TeacherList,
-            }, {
-                path: '/MyClass',
-                name: 'MyClass',
-                component: MyClass,
-            }, {
-                path: '/Classify',
-                name: 'Classify',
-                component: Classify,
-            },
+                path: '/GatherType',
+                name: 'GatherType',
+                component: GatherType,
+            }, 
         ],
     },
   ]

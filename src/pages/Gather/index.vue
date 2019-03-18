@@ -43,6 +43,11 @@
       <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
       <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
     </el-form-item>
+       <el-form-item label="所属元素:" prop="defaultType">
+    <el-select v-model="ruleForm.defaultType" placeholder="请选择对应分类">
+    <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
+    </el-select>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm">提 交</el-button>
       <el-button type="primary" @click="tryForm">列 表 测 试</el-button>
@@ -50,20 +55,7 @@
       <!--<el-button @click="resetForm">重置</el-button>-->
     </el-form-item>
 
-    <!--<el-form-item label="所属元素:" prop="teacher_id">-->
-    <!--<el-select v-model="ruleForm.teacher_id" placeholder="请选择所属老师">-->
-    <!--<el-option v-for="teacherList in teacherLists" :key="teacherList.teacher_id" :label="teacherList.name" :value="teacherList.teacher_id"></el-option>-->
-    <!--</el-select>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="上课时间:" prop="time">-->
-    <!--<el-date-picker-->
-    <!--v-model="ruleForm.time"-->
-    <!--type="datetimerange"-->
-    <!--range-separator="至"-->
-    <!--start-placeholder="开始日期"-->
-    <!--end-placeholder="结束日期">-->
-    <!--</el-date-picker>-->
-    <!--</el-form-item>-->
+    
     <el-table :data="testData" border style="width: 100%">
       <el-table-column prop="title" label="标题" width="280"></el-table-column>
       <el-table-column prop="link" label="链接" width="580"></el-table-column>
@@ -146,7 +138,9 @@ export default {
         contentRule: contentRuleArr,
         contentRange: "",
         ruleContentList: "",
-        ruleList: ""
+        ruleList: "",
+        defaultType: [],
+        gather_types:''
       },
       rules: {
         rule: [{ required: true, message: "请填写规则", trigger: "change" }],
@@ -161,7 +155,9 @@ export default {
     };
   },
 
-  // mounted () {
+  mounted () {
+   this.getTypes()
+  },
   //   const { course_id } = this.$route.query //尝试获取id，如果存在，则走提交编辑
   //   if (course_id) {
   //     this.$request({
@@ -193,6 +189,16 @@ export default {
   //   this.getClassify()
   // },
   methods: {
+
+    getTypes() {
+      this.$request({
+        url:'gatherType',
+        data: {
+          handle: 'list',
+          simple: true,
+        },
+      }).then(res => (this.ruleForm.defaultType = res.data),console.log(this.ruleForm.defaultType));
+    },
     tryForm() {
       //  通过ajax提交到后台
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
@@ -204,6 +210,7 @@ export default {
         url: this.ruleForm.url,
         full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,
+        gather_types:this.ruleForm.defaultType,
         type: 1
       };
       this.$request({

@@ -10,7 +10,7 @@
       <el-table
         :data="RuleData"
         border
-        style="width: 100%">
+        style="width: 90%">
         <el-table-column
           prop="id"
           label="编号"
@@ -42,6 +42,11 @@
           width="100">
         </el-table-column>
         <el-table-column
+          prop="ruleType"
+          label="所属分类"
+          width="100">
+        </el-table-column>
+        <el-table-column
           prop="handle"
           label="简称"
           width="100">
@@ -51,15 +56,16 @@
           label="URL"
           width="250">
         </el-table-column>
-         <el-table-column
+         <!-- <el-table-column
           prop="full_url"
           label="完整url"
           width="250">
-        </el-table-column>
+        </el-table-column> -->
+        
         <el-table-column
           fixed="right"
           label="操作"
-          width="100">
+          width="140">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="pageChange(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small" @click="handleChangeStatus(scope.row.id)">{{scope.row.status === 0 ? '启用' : '禁用'}}</el-button>
@@ -83,7 +89,7 @@
   import PageTitle from '@/components/PageTitle/index'
   import config from '@/utils/config'
   export default {
-    name: 'ClassList',
+    name: 'GatherList',
     components: { PageTitle },
     data() {
       return {

@@ -4,7 +4,7 @@ const menuData = {
     '/GatherList': '2-1',
     '/Gather': '2-2',
     '/GatherApi': '3-1',
-    '/CreditSetting': '3-2',
+    '/GatherType': '3-2',
     '/UserList': '4-1',
     '/TeacherList': '4-2',
     '/MyClass': '5',

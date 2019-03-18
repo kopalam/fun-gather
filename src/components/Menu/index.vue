@@ -64,6 +64,7 @@
       <router-link to="/GatherList"><el-menu-item index="2-1">采集列表</el-menu-item></router-link>
       <router-link to="/Gather"><el-menu-item index="2-2">规则模式</el-menu-item></router-link>
       <router-link to="/GatherApi"><el-menu-item index="3-1">接口模式</el-menu-item></router-link>
+      <router-link to="/GatherType"><el-menu-item index="3-2">新增分类</el-menu-item></router-link>
     </el-submenu>
   </el-menu>
 </template>
