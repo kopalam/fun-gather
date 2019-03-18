@@ -43,6 +43,11 @@
       <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
       <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
     </el-form-item>
+           <el-form-item label="所属元素:" prop="defaultType">
+    <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
+    <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
+    </el-select>
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm">提 交</el-button>
       <el-button type="primary" @click="tryForm">列 表 测 试</el-button>
@@ -50,20 +55,7 @@
       <!--<el-button @click="resetForm">重置</el-button>-->
     </el-form-item>
 
-    <!--<el-form-item label="所属元素:" prop="teacher_id">-->
-    <!--<el-select v-model="ruleForm.teacher_id" placeholder="请选择所属老师">-->
-    <!--<el-option v-for="teacherList in teacherLists" :key="teacherList.teacher_id" :label="teacherList.name" :value="teacherList.teacher_id"></el-option>-->
-    <!--</el-select>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="上课时间:" prop="time">-->
-    <!--<el-date-picker-->
-    <!--v-model="ruleForm.time"-->
-    <!--type="datetimerange"-->
-    <!--range-separator="至"-->
-    <!--start-placeholder="开始日期"-->
-    <!--end-placeholder="结束日期">-->
-    <!--</el-date-picker>-->
-    <!--</el-form-item>-->
+   
     <el-table :data="testData" border style="width: 100%">
       <el-table-column prop="title" label="标题" width="280"></el-table-column>
       <el-table-column prop="link" label="链接" width="580"></el-table-column>
@@ -84,6 +76,7 @@ let contentRuleObj = {
   title: ["h1", "text"],
   link: ["#chan_newsDetail", "html"]
 };
+let types_value = '';
 let ruleArr = JSON.stringify(ruleObj); //列表采集规则转换成字符
 let contentRuleArr = JSON.stringify(contentRuleObj); //内容采集规则转换成字符
 let inputLimit = function(e) {
@@ -145,7 +138,9 @@ export default {
         contentRule: "",
         contentRange: "",
         ruleContentList: "",
-        ruleList: ""
+        ruleList: "",
+        defaultType: [],
+        gather_types:''
       },
       rules: {
         rule: [{ required: true, message: "请填写规则", trigger: "change" }],
@@ -162,14 +157,14 @@ export default {
 
   mounted() {
     const id = this.$route.query.id; //尝试获取id，如果存在，则走提交编辑
-    console.log(id)
+    this.getTypes()
     if (id) {
       this.$request({
         url: "/editRule?_token="+this.$token,
         data: { id }
       }).then(res => {
         const ruleData = res.data;
-        console.log(ruleData[0]);
+        // console.log(ruleData[0][defaultType]);
         this.ruleForm = {
           id,
           handle: ruleData[0].handle,
@@ -184,13 +179,27 @@ export default {
           contentRule: ruleData[0].rule_content,
           contentRange: ruleData[0].range_content,
           ruleContentList: "",
-          ruleList: ""
+          ruleList: "",
+          defaultType: ruleData[0].defaultType,
+          gather_types:''
         };
       });
     }
 
   },
  methods: {
+    obtainValue(value) {
+       types_value = value;
+    },
+    getTypes() {
+      this.$request({
+        url:'gatherType',
+        data: {
+          handle: 'list',
+          simple: true,
+        },
+      }).then(res => (this.ruleForm.defaultType = res.data));
+    },
     tryForm() {
       //  通过ajax提交到后台
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
@@ -202,7 +211,8 @@ export default {
         url: this.ruleForm.url,
         full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,
-        type: 1
+        type: 1,
+        gather_types:types_value,
       };
       this.$request({
         url: "/gatherList?_token="+this.$token,
@@ -214,6 +224,7 @@ export default {
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "2";
+       this.ruleForm.gather_types = types_value;
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
@@ -224,6 +235,7 @@ export default {
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "3";
+       this.ruleForm.gather_types = types_value;
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
