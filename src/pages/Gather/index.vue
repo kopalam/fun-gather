@@ -39,9 +39,13 @@
     <el-form-item label="完整URL" prop="full_url">
       <el-input v-model="ruleForm.full_url" placeholder="如果需要，请填入后缀"></el-input>
     </el-form-item>
-    <el-form-item label="是否编码" prop="type">
+    <el-form-item label="列表是否编码" prop="type">
       <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
       <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
+    </el-form-item>
+    <el-form-item label="内容是否编码" prop="c_type">
+      <el-radio v-model="ruleForm.c_encoding" label="1">需要</el-radio>
+      <el-radio v-model="ruleForm.c_encoding" label="0">不需</el-radio>
     </el-form-item>
        <el-form-item label="所属元素:" prop="defaultType">
     <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
@@ -137,6 +141,7 @@ export default {
         author: "中华游戏网",
         type: "",
         encoding: "",
+        c_encoding:"",
         contentRule: contentRuleArr,
         contentRange: "",
         ruleContentList: "",
@@ -211,6 +216,7 @@ export default {
         range: this.ruleForm.range,
         rule: this.ruleForm.ruleList,
         encoding: this.ruleForm.encoding,
+        c_encoding: this.ruleForm.c_encoding,
         url: this.ruleForm.url,
         full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,

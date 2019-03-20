@@ -1,4 +1,4 @@
-/**
+ /**
 * User: whoAmI
 * Date: 2019/02/13
 *
@@ -43,9 +43,13 @@
       <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
       <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
     </el-form-item>
-           <el-form-item label="所属元素:" prop="defaultType">
-    <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
-    <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
+    <el-form-item label="是否编码" prop="type">
+      <el-radio v-model="ruleForm.c_encoding" label="1">需要</el-radio>
+      <el-radio v-model="ruleForm.c_encoding" label="0">不需</el-radio>
+    </el-form-item>
+    <el-form-item label="所属元素:" prop="defaultType">
+      <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
+      <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
     </el-select>
     </el-form-item>
     <el-form-item>
@@ -135,6 +139,7 @@ export default {
         full_url:'',
         type: "",
         encoding: "",
+        c_encoding: "",
         contentRule: "",
         contentRange: "",
         ruleContentList: "",
@@ -159,31 +164,7 @@ export default {
     const id = this.$route.query.id; //尝试获取id，如果存在，则走提交编辑
     this.getTypes()
     if (id) {
-      this.$request({
-        url: "/editRule?_token="+this.$token,
-        data: { id }
-      }).then(res => {
-        const ruleData = res.data;
-        // console.log(ruleData[0][defaultType]);
-        this.ruleForm = {
-          id,
-          handle: ruleData[0].handle,
-          name: ruleData[0].name,
-          rule: ruleData[0].rule_list,
-          range: ruleData[0].range_list,
-          url: ruleData[0].url,
-          full_url:ruleData[0].full_url,
-          author: ruleData[0].author,
-          type: '',
-          encoding: JSON.stringify(ruleData[0].encoding),
-          contentRule: ruleData[0].rule_content,
-          contentRange: ruleData[0].range_content,
-          ruleContentList: "",
-          ruleList: "",
-          defaultType: ruleData[0].defaultType,
-          gather_types:''
-        };
-      });
+      this.editFrom(id)
     }
 
   },
@@ -208,6 +189,7 @@ export default {
         range: this.ruleForm.range,
         rule: this.ruleForm.ruleList,
         encoding: this.ruleForm.encoding,
+        c_encoding: this.ruleForm.c_encoding,
         url: this.ruleForm.url,
         full_url:this.ruleForm.full_url,
         author: this.ruleForm.author,
@@ -228,14 +210,14 @@ export default {
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
-      }).then(res => this.testData = res.data);
+      }).then(res => this.testData = res.data,console.log(this.testData));
     },
 
     submitForm() {
       this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
       this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
       this.ruleForm.type = "3";
-       this.ruleForm.gather_types = types_value;
+      this.ruleForm.gather_types = types_value;
       this.$request({
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
@@ -243,8 +225,36 @@ export default {
             this.$message.success('新增规则成功'),
             setTimeout(() => { this.$router.push({ path: '/GatherList' }) }, 1000)
           })
+    },
+    editFrom(id) {
+      this.$request({
+        url: "/editRule?_token="+this.$token,
+        data: { id }
+      }).then(res => {
+        const ruleData = res.data;
+        // console.log(ruleData[0].defaultType);
+        this.ruleForm = {
+          id,
+          handle: ruleData[0].handle,
+          name: ruleData[0].name,
+          rule: ruleData[0].rule_list,
+          range: ruleData[0].range_list,
+          url: ruleData[0].url,
+          full_url:ruleData[0].full_url,
+          author: ruleData[0].author,
+          type: '',
+          encoding: JSON.stringify(ruleData[0].encoding),
+          c_encoding: JSON.stringify(ruleData[0].c_encoding),
+          contentRule: ruleData[0].rule_content,
+          contentRange: ruleData[0].range_content,
+          ruleContentList: "",
+          ruleList: "",
+          defaultType: this.getTypes(),
+          gather_types:''
+        };
+        console.log(this.ruleForm);
+      });
     }
-    
   }
 };
 </script>

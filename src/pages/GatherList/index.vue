@@ -42,7 +42,7 @@
           width="100">
         </el-table-column>
         <el-table-column
-          prop="ruleType"
+          prop="gather_types_name"
           label="所属分类"
           width="100">
         </el-table-column>
@@ -105,7 +105,7 @@
               data: {
                   page: this.page,
               }
-          }).then(res => (this.RuleData = res.data.data));
+          }).then(res => (this.RuleData = res.data));
       },
       handleChangeStatus(id) {
         this.$request({
