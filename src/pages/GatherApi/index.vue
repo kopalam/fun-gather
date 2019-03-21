@@ -12,18 +12,6 @@
     class="demo-ruleForm"
   >
     <PageTitle :title="'采集列表测试'"/>
-    <el-form-item label="列表规则:" prop="rule">
-      <el-input type="textarea" :rows="4" v-model="ruleForm.rule" placeholder="请填入对应采集规则"></el-input>
-    </el-form-item>
-    <el-form-item label="列表元素:" prop="range">
-      <el-input v-model="ruleForm.range" placeholder="请填入所属父类元素 如 .articleList"></el-input>
-    </el-form-item>
-    <el-form-item label="内容规则:" prop="contentRule">
-      <el-input type="textarea" :rows="4" v-model="ruleForm.contentRule" placeholder="请填入内容对应采集规则"></el-input>
-    </el-form-item>
-    <el-form-item label="内容元素:" prop="contentRange">
-      <el-input v-model="ruleForm.contentRange" placeholder="请填入内容所属父类元素 如 .articleList"></el-input>
-    </el-form-item>
     <el-form-item label="作者:" prop="author">
       <el-input v-model="ruleForm.author" placeholder="请填入作者"></el-input>
     </el-form-item>
@@ -158,37 +146,7 @@ export default {
     };
   },
 
-  // mounted () {
-  //   const { course_id } = this.$route.query //尝试获取id，如果存在，则走提交编辑
-  //   if (course_id) {
-  //     this.$request({
-  //       url: '/apis/addons/course/course/detail',
-  //       data: { course_id }
-  //     }).then(res => {
-  //       const { course, teacher, course_set } = res.data
-  //       const class_time = JSON.parse(course.class_time)
-  //       this.ruleForm = {
-  //         course_id,
-  //         handle: 'edit',
-  //         kid: parseInt([course.kid]),
-  //         teacher_id: teacher.teacher_id + '',
-  //         name: course.name,
-  //         time: [moment(course_set.stime), moment(course_set.etime)],
-  //         address: course_set.address,
-  //         remark: course_set.remark,
-  //         content: course.content,
-  //         cover: course.cover,
-  //         start: course_set.status === 0 ? true : false,
-  //         class_time1: class_time[0][1],
-  //         class_time2: class_time[1][1],
-  //         class_time3: class_time[2][1],
-  //         class_time4: class_time[3][1],
-  //       }
-  //     })
-  //    }
-  //   this.getTeacher()
-  //   this.getClassify()
-  // },
+ 
   methods: {
     tryForm() {
       //  通过ajax提交到后台
@@ -200,10 +158,10 @@ export default {
         encoding: this.ruleForm.encoding,
         url: this.ruleForm.url,
         author: this.ruleForm.author,
-        type: 1
+        type: 4
       };
       this.$request({
-        url: "/gatherList?_token='+this.token,",
+        url: "/getJsonContent?_token='+this.token,",
         data: this.listTry
       }).then(res => (this.testData = res.data));
     },

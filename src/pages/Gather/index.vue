@@ -11,60 +11,21 @@
     label-width="100px"
     class="demo-ruleForm"
   >
-    <PageTitle :title="'采集列表测试'"/>
-    <el-form-item label="列表规则:" prop="rule">
-      <el-input type="textarea" :rows="4" v-model="ruleForm.rule" placeholder="请填入对应采集规则"></el-input>
-    </el-form-item>
-    <el-form-item label="列表元素:" prop="range">
-      <el-input v-model="ruleForm.range" placeholder="请填入所属父类元素 如 .articleList"></el-input>
-    </el-form-item>
-    <el-form-item label="内容规则:" prop="contentRule">
-      <el-input type="textarea" :rows="4" v-model="ruleForm.contentRule" placeholder="请填入内容对应采集规则"></el-input>
-    </el-form-item>
-    <el-form-item label="内容元素:" prop="contentRange">
-      <el-input v-model="ruleForm.contentRange" placeholder="请填入内容所属父类元素 如 .articleList"></el-input>
-    </el-form-item>
-    <el-form-item label="作者:" prop="author">
-      <el-input v-model="ruleForm.author" placeholder="请填入作者"></el-input>
-    </el-form-item>
-    <el-form-item label="网站名称" prop="name">
-      <el-input v-model="ruleForm.name" placeholder="请填入采集网站名称"></el-input>
-    </el-form-item>
-    <el-form-item label="简称" prop="handle">
-      <el-input v-model="ruleForm.handle" placeholder="请填入采集简称 如 qqEnt"></el-input>
-    </el-form-item>
-    <el-form-item label="采集URL" prop="url">
-      <el-input v-model="ruleForm.url" placeholder="请填入采集列表的URL"></el-input>
-    </el-form-item>
-    <el-form-item label="完整URL" prop="full_url">
-      <el-input v-model="ruleForm.full_url" placeholder="如果需要，请填入后缀"></el-input>
-    </el-form-item>
-    <el-form-item label="列表是否编码" prop="type">
-      <el-radio v-model="ruleForm.encoding" label="1">需要</el-radio>
-      <el-radio v-model="ruleForm.encoding" label="0">不需</el-radio>
-    </el-form-item>
-    <el-form-item label="内容是否编码" prop="c_type">
-      <el-radio v-model="ruleForm.c_encoding" label="1">需要</el-radio>
-      <el-radio v-model="ruleForm.c_encoding" label="0">不需</el-radio>
-    </el-form-item>
-       <el-form-item label="所属元素:" prop="defaultType">
-    <el-select v-model="ruleForm.defaultType.id" placeholder="请选择对应分类" @change="obtainValue">
-    <el-option v-for="getType in ruleForm.defaultType" :key="getType.id" :label="getType.name" :value="getType.id"></el-option>
-    </el-select>
-    </el-form-item>
+    <PageTitle :title="'一 键 采 集'"/>
+
     <el-form-item>
-      <el-button type="primary" @click="submitForm">提 交</el-button>
-      <el-button type="primary" @click="tryForm">列 表 测 试</el-button>
-      <el-button type="primary" @click="tryContentForm">内 容 测 试</el-button>
+      <el-button v-for=" item in ruleForm.defaultType " :key="item.id" :label="item.name" :value="item.id" type="primary" @click="gatherForm(item.id)">{{item.name}}</el-button>
       <!--<el-button @click="resetForm">重置</el-button>-->
     </el-form-item>
-
-    
-    <el-table :data="testData" border style="width: 100%">
-      <el-table-column prop="title" label="标题" width="280"></el-table-column>
-      <el-table-column prop="link" label="链接" width="580"></el-table-column>
-      <el-table-column prop="content" label="内容" width="580"></el-table-column>
+    <p>采集耗时:{{this.contentData.time ? contentData.time : ' '+0+' 秒'}}</p>
+    <el-table :data='contentData' border style="width: 84%">
+      <el-table-column prop= "article_title" label= "标题" width="380"></el-table-column>
+      <el-table-column prop= "article_author" label= "作者" width="280"></el-table-column>
+      <el-table-column prop= "article_come" label= "来源" width="180"></el-table-column>
+      <el-table-column prop= "article_create_time" label= "创建时间" width="180"></el-table-column>
+      <el-table-column prop= "md5" label= "密钥" width="196"></el-table-column>
     </el-table>
+    
   </el-form>
 </template>
 
@@ -132,16 +93,6 @@ export default {
       contentData: [],
       listTry: "",
       ruleForm: {
-        handle: "chinaGame",
-        name: "中华游戏网",
-        rule: ruleArr,
-        full_url:'',
-        range: ".item-phototext",
-        url: "https://game.china.com/news/jx/",
-        author: "中华游戏网",
-        type: "",
-        encoding: "",
-        c_encoding:"",
         contentRule: contentRuleArr,
         contentRange: "",
         ruleContentList: "",
@@ -165,36 +116,7 @@ export default {
   mounted () {
    this.getTypes()
   },
-  //   const { course_id } = this.$route.query //尝试获取id，如果存在，则走提交编辑
-  //   if (course_id) {
-  //     this.$request({
-  //       url: '/apis/addons/course/course/detail',
-  //       data: { course_id }
-  //     }).then(res => {
-  //       const { course, teacher, course_set } = res.data
-  //       const class_time = JSON.parse(course.class_time)
-  //       this.ruleForm = {
-  //         course_id,
-  //         handle: 'edit',
-  //         kid: parseInt([course.kid]),
-  //         teacher_id: teacher.teacher_id + '',
-  //         name: course.name,
-  //         time: [moment(course_set.stime), moment(course_set.etime)],
-  //         address: course_set.address,
-  //         remark: course_set.remark,
-  //         content: course.content,
-  //         cover: course.cover,
-  //         start: course_set.status === 0 ? true : false,
-  //         class_time1: class_time[0][1],
-  //         class_time2: class_time[1][1],
-  //         class_time3: class_time[2][1],
-  //         class_time4: class_time[3][1],
-  //       }
-  //     })
-  //    }
-  //   this.getTeacher()
-  //   this.getClassify()
-  // },
+  
   methods: {
     obtainValue(value) {
        types_value = value;
@@ -208,127 +130,15 @@ export default {
         },
       }).then(res => (this.ruleForm.defaultType = res.data),console.log(this.ruleForm.defaultType));
     },
-    tryForm() {
-      //  通过ajax提交到后台
-      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
-      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
-      this.listTry = {
-        range: this.ruleForm.range,
-        rule: this.ruleForm.ruleList,
-        encoding: this.ruleForm.encoding,
-        c_encoding: this.ruleForm.c_encoding,
-        url: this.ruleForm.url,
-        full_url:this.ruleForm.full_url,
-        author: this.ruleForm.author,
-        gather_types:types_value,
-        type: 1
-      };
+    gatherForm(id) {
       this.$request({
-        url: "/gatherList?_token="+this.$token,
-        data: this.listTry
-      }).then(res => (this.testData = res.data));
+        url: 'getContents',
+        data: {
+            id:id,
+        },
+      }).then(res => (this.contentData = res.data),console.log(this.contentData));
     },
-
-    tryContentForm() {
-      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
-      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
-      this.ruleForm.type = "2";
-      this.ruleForm.gather_types = types_value;
-      this.$request({
-        url: '/gatherContent?_token='+this.$token,
-        data:this.ruleForm
-      }).then(
-        res => this.testData = res.data
-        )
-    },
-
-    submitForm() {
-      this.ruleForm.ruleList = JSON.parse(this.ruleForm.rule);
-      this.ruleForm.ruleContentList = JSON.parse(this.ruleForm.contentRule);
-      this.ruleForm.type = "3";
-      this.ruleForm.gather_types = types_value;
-      this.$request({
-        url: '/gatherContent?_token='+this.$token,
-        data:this.ruleForm
-      }).then(() => {
-            this.$message.success('新增规则成功'),
-            setTimeout(() => { this.$router.push({ path: '/GatherList' }) }, 1000)
-          })
-    }
-    
   }
-
-  // methods: {
-  //   inputLimit: inputLimit,
-  //   getTeacher () {
-  //       this.$request({
-  //           url: '/apis/admin/admin/teacher',
-  //           data: {}
-  //       }).then(res => this.teacherLists = res.data)
-  //   },
-  //   getClassify () {
-  //       this.$request({
-  //           url: '/apis/addons/kinds/kinds/getkinds',
-  //           data: {},
-  //       }).then(res => {
-  //           const data = res.data
-  //           const sNav = data.filter(val => val.parent_id)
-  //           this.kidLists = sNav
-  //       })
-  //   },
-  //   getImgData (data) {
-  //     this.ruleForm.cover = data
-  //   } ,
-  //   getContentData (data) {
-  //     this.ruleForm.content = data
-  //   } ,
-  //   submitForm() {
-  //     this.$refs.ruleForm.validate(valid => {
-  //       if (!valid) { return false }
-  //
-  //       const data = this.ruleForm
-  //
-  //       if(data.time) {
-  //           data.stime = Math.round(data.time[0] / 1000)
-  //           data.etime = Math.round(data.time[1] / 1000)
-  //       }
-  //       delete data.time
-  //
-  //       data.start = data.start ? 0 : 1
-  //
-  //       for (let k in data) {
-  //         if (data[k] === "") {
-  //           delete data[k]
-  //         }
-  //       }
-  //
-  //       let newArr = []
-  //       for (let i = 1; i <= 4; i ++) {
-  //           if (data['class_time'+i] == null) {
-  //               this.$message.success('【课时／价格】填写不完全')
-  //               return false
-  //           }
-  //           if (data['class_time'+i] != null) {
-  //               newArr.push([i*20,data['class_time'+i]])
-  //           }
-  //           delete data['class_time'+i]
-  //       }
-  //       newArr = `[${newArr.map(t=>`[${t.map(i => i).join(',')}]`).join(',')}]`
-  //       data.class_time = newArr
-  //
-  //       this.$request({
-  //         url: '/apis/addons/course/course/coursehandle',
-  //         data,
-  //       }).then(() => {
-  //         this.$message.success('新增课程成功')
-  //         setTimeout(() => { this.$router.push({ path: '/ClassList' }) }, 1000)
-  //       })
-  //     })
-  //   },
-  //   resetForm() {
-  //     this.$refs.ruleForm.resetFields()
-  //   }
-  // }
 };
 </script>
 

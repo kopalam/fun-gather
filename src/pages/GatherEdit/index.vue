@@ -152,6 +152,7 @@ export default {
         range: [{ required: true, message: "请输入父类元素", trigger: "blur" }],
         name: [{ required: true, message: "请输入网站名称", trigger: "blur" }],
         author: [{ required: true, message: "请输入作者", trigger: "change" }],
+        defaultType: [{ required: true, message: "请选择分类", trigger: "change" }],
         url: [
           { required: true, message: "请输入采集列表URL", trigger: "blur" }
         ],
@@ -222,7 +223,7 @@ export default {
         url: '/gatherContent?_token='+this.$token,
         data:this.ruleForm
       }).then(() => {
-            this.$message.success('新增规则成功'),
+            this.$message.success('编辑规则成功'),
             setTimeout(() => { this.$router.push({ path: '/GatherList' }) }, 1000)
           })
     },

@@ -4,10 +4,12 @@ import Router from 'vue-router'
 import Layout from '@/pages/Layout'
 import ArticleList from '@/pages/ArticleList/index'
 import GatherList from '@/pages/GatherList/index'
-import Gather from '@/pages/Gather/index'
+import GatherCreate from '@/pages/GatherCreate/index'
 import GatherEdit from '@/pages/GatherEdit/index'
 import GatherApi from '@/pages/GatherApi/index'
 import GatherType from '@/pages/GatherType/index'
+import Gather from '@/pages/Gather/index'
+import AddArticle from '@/pages/AddArticle/index'
 const Login = resolve => require(['@/pages/Login/index'], resolve)
 
 Vue.use(Router)
@@ -28,9 +30,9 @@ const router = new Router({
                 name: 'ArticleList',
                 component: ArticleList,
             }, {
-                path: '/Gather',
-                name: 'Gather',
-                component: Gather,
+                path: '/GatherCreate',
+                name: 'GatherCreate',
+                component: GatherCreate,
             },{
                 path: '/GatherEdit',
                 name: 'GatherEdit',
@@ -47,6 +49,15 @@ const router = new Router({
                 path: '/GatherType',
                 name: 'GatherType',
                 component: GatherType,
+            }, {
+                path: '/Gather',
+                name: 'Gather',
+                component: Gather,
+            }, 
+            {
+                path: '/AddArticle',
+                name: 'AddArticle',
+                component: AddArticle,
             }, 
         ],
     },
