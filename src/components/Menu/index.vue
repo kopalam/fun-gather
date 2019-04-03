@@ -56,7 +56,19 @@
         <!--<span slot="title">我的课程</span>-->
       <!--</el-menu-item>-->
     <!--</router-link>-->
-    <el-submenu index="2">
+        <el-submenu index="1">
+      <template slot="title">
+        <i class="el-icon-edit"></i>
+        <span>用户管理</span>
+      </template>
+      <router-link to="/GatherList"><el-menu-item index="1-1">采集列表</el-menu-item></router-link>
+      <router-link to="/GatherCreate"><el-menu-item index="1-2">规则模式</el-menu-item></router-link>
+      <router-link to="/GatherApi"><el-menu-item index="3-1">接口模式</el-menu-item></router-link>
+      <router-link to="/GatherType"><el-menu-item index="3-2">新增分类</el-menu-item></router-link>
+      <router-link to="/Gather"><el-menu-item index="4-1">一键采集</el-menu-item></router-link>
+      <!-- <router-link to="/AddArticle"><el-menu-item index="4-2">添加文章</el-menu-item></router-link> -->
+    </el-submenu>
+    <el-submenu>
       <template slot="title">
         <i class="el-icon-edit"></i>
         <span>采集管理</span>

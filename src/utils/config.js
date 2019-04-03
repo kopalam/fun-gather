@@ -6,7 +6,7 @@
  */
 
 export default {
-  // baseUrl: 'http://api.test.blackcore.com.cn',
+  baseUrl: 'http://api.test.blackcore.com.cn',
   // baseUrl: 'http://lumen.test/'//'http://api.test.blackcore.com.cn'//
-  baseUrl: 'http://funx.text/'
+  // baseUrl: 'http://funx.text/'
 }

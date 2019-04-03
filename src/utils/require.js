@@ -61,6 +61,7 @@ axios.interceptors.response.use(function (response) {
 
 async function request(options) {
   options.method = 'post'
+  
   if (options.config === 'formData') {
     options.headers = {'Content-Type': 'multipart/form-data'}
   } else {
@@ -84,6 +85,7 @@ async function request(options) {
 }
 
 async function requestAll (data1, data2) {
+  
   function fun1() {
     return axios({ method: 'post', ...data1, data: qs.stringify(data1.data) })
   }

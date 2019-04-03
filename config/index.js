@@ -12,9 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {    //将www.exaple.com印射为/apis
-        // target: 'http://api.test.blackcore.com.cn',
+        target: 'http://api.test.blackcore.com.cn',
         // target: 'http://lumen.test/',//'http://api.test.blackcore.com.cn',//'http://lumen.test',  // 接口域名
-        target: 'http://funx.test/',
+        // target: 'http://funx.test/',
         secure: false,  // 如果是https接口，需要配置这个参数
         changeOrigin: true,  //是否跨域
         pathRewrite: {
